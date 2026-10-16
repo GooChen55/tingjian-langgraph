@@ -1,0 +1,4 @@
+-r requirements.txt
+pytest>=8,<10
+
+paramiko==4.0.0

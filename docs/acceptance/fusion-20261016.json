@@ -1,0 +1,112 @@
+{
+  "generated_at": "2026-10-16T10:31:45+08:00",
+  "scope": "Windows applications and owned VM resources; local simulation; fixed model samples",
+  "reports": [
+    {
+      "name": "Python 单测",
+      "result": 133,
+      "local_report": ".runtime/fusion-python-tests.log",
+      "report_sha256": "72fd56113c2b49fa09eba96d5e59bfb978eb367bc992af65218c1223b92fa048",
+      "report_modified_at": "2026-10-16T10:25:23+08:00"
+    },
+    {
+      "name": "Java 单测",
+      "result": 42,
+      "local_report": ".runtime/fusion-java-tests.log",
+      "report_sha256": "16aa6d2953c4ef3bf9afb03827655d10d37675045246710da0b23accd14b65d9",
+      "report_modified_at": "2026-10-15T21:39:46+08:00"
+    },
+    {
+      "name": "H5 生产构建",
+      "result": true,
+      "local_report": ".runtime/fusion-h5-build.log",
+      "report_sha256": "8d6bce0e5fe222f5419d9e3156f2135b24991110687bb08655281ddf13b9c15b",
+      "report_modified_at": "2026-10-16T10:24:06+08:00"
+    },
+    {
+      "name": "前两阶段实际业务",
+      "result": 34,
+      "local_report": ".runtime/stages-v4.json",
+      "report_sha256": "9ca0720bb81177ee9596c1f7ada208ba6e252b2390a0638fcc48e8aff61eabec",
+      "report_modified_at": "2026-10-15T21:43:47+08:00"
+    },
+    {
+      "name": "模型兼容与入口",
+      "result": true,
+      "local_report": ".runtime/model-compatibility-live.json",
+      "report_sha256": "ccf0942030154997e05979e67ff57bbbfd4218d85a1bb97cef6aeb2b8d6a937a",
+      "report_modified_at": "2026-10-16T10:29:07+08:00"
+    },
+    {
+      "name": "固定 Top-5 召回",
+      "result": "16/16",
+      "local_report": ".runtime/retrieval-evaluation.json",
+      "report_sha256": "9310b5b2b54525e90a593a2f9763072cbf0fd93034b82b3fdd6f53c853ccf9b8",
+      "report_modified_at": "2026-10-15T21:44:24+08:00"
+    },
+    {
+      "name": "固定 Agent 契约",
+      "result": "20/20",
+      "local_report": ".runtime/agent-evaluation.json",
+      "report_sha256": "7519c092c0b0b9a3059c4e9513267cfc5c4614b269757994cda89b557f3db315",
+      "report_modified_at": "2026-10-15T22:30:09+08:00"
+    },
+    {
+      "name": "支付退款及实际重启",
+      "result": 30,
+      "local_report": ".runtime/payments-acceptance.json",
+      "report_sha256": "dd99036115478e90a5ac5f219c47156c1592333b7524dde5d5b695eec0b52e99",
+      "report_modified_at": "2026-10-16T10:20:32+08:00"
+    },
+    {
+      "name": "融合专项及实际重启",
+      "result": 14,
+      "local_report": ".runtime/fusion-acceptance.json",
+      "report_sha256": "364db8c404899bc715fcc3850672dd55257b522e4719affe7a3c3a6946faed4f",
+      "report_modified_at": "2026-10-16T10:21:19+08:00"
+    },
+    {
+      "name": "Mongo 进度并发与索引",
+      "result": 6,
+      "local_report": ".runtime/fusion-mongo-progress.json",
+      "report_sha256": "09efd4fe73ff18cdd32c66a52a70ec71e84d95762ba1d98b2af2b21eeda61b9c",
+      "report_modified_at": "2026-10-16T10:21:45+08:00"
+    },
+    {
+      "name": "Rabbit 到 ES 同步",
+      "result": true,
+      "local_report": ".runtime/project-launch-smoke.json",
+      "report_sha256": "0f2f1c1ab0b61c652a5cf686b28e10b63ce15975c5711cab88d03c0768a2ee70",
+      "report_modified_at": "2026-10-16T10:21:43+08:00"
+    },
+    {
+      "name": "浏览器实际操作",
+      "result": true,
+      "local_report": ".runtime/fusion-browser.json",
+      "report_sha256": "ba2a27d150517e76731040cfc9860750b33c8cfae4641bc661ea88a78b2ee1fa",
+      "report_modified_at": "2026-10-16T10:30:46+08:00"
+    },
+    {
+      "name": "真实 MCP 联网",
+      "result": true,
+      "local_report": ".runtime/fusion-mcp-live.json",
+      "report_sha256": "5c6e489fd707b7c458d8f1921a0b8b30d92f28e1429c267ffb4f39808bc85963",
+      "report_modified_at": "2026-10-15T21:24:06+08:00"
+    },
+    {
+      "name": "其他项目容器隔离",
+      "result": true,
+      "local_report": ".runtime/fusion-isolation-report.json",
+      "report_sha256": "489193f47f752bac7f59715023ffa1598a941fbd72f11633e65ac9c9f9c6639a",
+      "report_modified_at": "2026-10-16T10:21:41+08:00"
+    },
+    {
+      "name": "最终六服务与工作进程健康",
+      "result": true,
+      "local_report": ".runtime/fusion-final-health.json",
+      "report_sha256": "d408fbd3d70182274625dfe8eea58192481525dffae97296d58a5496e6263bb7",
+      "report_modified_at": "2026-10-16T10:33:30+08:00"
+    }
+  ],
+  "raw_reports_private": true
+}

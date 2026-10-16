@@ -1,0 +1,94 @@
+name: aillisten-dev-ai
+x-owned: &owned
+  labels:
+    aillisten.owner: aillisten-dev/v1
+  restart: unless-stopped
+  networks: [aillisten-ai]
+services:
+  etcd:
+    <<: *owned
+    image: quay.io/coreos/etcd:v3.5.18
+    container_name: aillisten-dev-etcd
+    mem_limit: 256m
+    command: [etcd, --advertise-client-urls=http://etcd:2379, --listen-client-urls=http://0.0.0.0:2379, --data-dir=/etcd]
+    environment:
+      ETCD_AUTO_COMPACTION_MODE: revision
+      ETCD_AUTO_COMPACTION_RETENTION: "1000"
+      ETCD_QUOTA_BACKEND_BYTES: "4294967296"
+      ETCD_SNAPSHOT_COUNT: "50000"
+    volumes: ["etcd-data:/etcd"]
+  minio:
+    <<: *owned
+    image: sha256:e31e0721a96b4366c3a3b2352e29a8edada826a85adef236efad6e92a887502e
+    pull_policy: never
+    container_name: aillisten-dev-minio
+    mem_limit: 256m
+    command: [minio, server, /data, --console-address, ":9001"]
+    environment:
+      MINIO_ROOT_USER: aillisten_minio
+      MINIO_ROOT_PASSWORD: ${AILLISTEN_MINIO_PASSWORD:?required}
+    ports: ["192.168.6.100:39000:9000", "192.168.6.100:39001:9001"]
+    volumes: ["minio-data:/data"]
+  milvus:
+    <<: *owned
+    image: milvusdb/milvus:v2.6.24
+    container_name: aillisten-dev-milvus
+    mem_limit: 2g
+    cpus: 2
+    command: [milvus, run, standalone]
+    security_opt: [seccomp:unconfined]
+    environment:
+      ETCD_ENDPOINTS: etcd:2379
+      MINIO_ADDRESS: minio:9000
+      MINIO_ACCESS_KEY_ID: aillisten_minio
+      MINIO_SECRET_ACCESS_KEY: ${AILLISTEN_MINIO_PASSWORD:?required}
+      MQ_TYPE: rocksmq
+    depends_on: [etcd, minio]
+    ports: ["192.168.6.100:39530:19530", "192.168.6.100:39091:9091"]
+    volumes:
+      - milvus-data:/var/lib/milvus
+      - ../private/milvus.yaml:/milvus/configs/user.yaml:ro
+  neo4j:
+    <<: *owned
+    image: neo4j:5.26-community
+    container_name: aillisten-dev-neo4j
+    mem_limit: 768m
+    environment:
+      NEO4J_AUTH: neo4j/${AILLISTEN_NEO4J_PASSWORD:?required}
+      NEO4J_server_memory_heap_initial__size: 128M
+      NEO4J_server_memory_heap_max__size: 256M
+      NEO4J_server_memory_pagecache_size: 128M
+    ports: ["192.168.6.100:47474:7474", "192.168.6.100:47687:7687"]
+    volumes: ["neo4j-data:/data"]
+  qdrant:
+    <<: *owned
+    image: qdrant/qdrant:v1.17.1
+    container_name: aillisten-dev-qdrant
+    mem_limit: 384m
+    environment:
+      QDRANT__SERVICE__API_KEY: ${AILLISTEN_QDRANT_KEY:?required}
+    ports: ["192.168.6.100:36333:6333", "192.168.6.100:36334:6334"]
+    volumes: ["qdrant-data:/qdrant/storage", "qdrant-snapshots:/qdrant/snapshots"]
+networks:
+  aillisten-ai:
+    name: aillisten-dev-ai
+    labels: {aillisten.owner: aillisten-dev/v1}
+volumes:
+  etcd-data:
+    name: aillisten-dev-etcd-data
+    labels: {aillisten.owner: aillisten-dev/v1}
+  minio-data:
+    name: aillisten-dev-minio-data
+    labels: {aillisten.owner: aillisten-dev/v1}
+  milvus-data:
+    name: aillisten-dev-milvus-data
+    labels: {aillisten.owner: aillisten-dev/v1}
+  neo4j-data:
+    name: aillisten-dev-neo4j-data
+    labels: {aillisten.owner: aillisten-dev/v1}
+  qdrant-data:
+    name: aillisten-dev-qdrant-data
+    labels: {aillisten.owner: aillisten-dev/v1}
+  qdrant-snapshots:
+    name: aillisten-dev-qdrant-snapshots
+    labels: {aillisten.owner: aillisten-dev/v1}

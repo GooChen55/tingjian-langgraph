@@ -1,0 +1,25 @@
+server:
+  address: 127.0.0.1
+  port: 19202
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:${LISTENING_DB_PORT:24316}/tingshu_album?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai
+    username: root
+    password: ${LISTENING_DB_PASSWORD:listening_local_only}
+  cloud:
+    nacos:
+      config:
+        enabled: false
+      discovery:
+        enabled: false
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 17389
+  rabbitmq:
+    listener:
+      simple:
+        auto-startup: false
+      direct:
+        auto-startup: false

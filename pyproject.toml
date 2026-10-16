@@ -1,0 +1,4 @@
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["python/shared", "python/assistant", "python/knowledge", "python/operations", "python/workers", "tests/assistant"]
+cache_dir = ".runtime/cache/pytest"

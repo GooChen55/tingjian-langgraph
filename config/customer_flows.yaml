@@ -1,0 +1,8 @@
+after_sales:
+  name: 售后申请
+  slots:
+    orderId: {label: 订单, pattern: '^[0-9]{1,18}$'}
+    reason: {label: 申请原因, min_length: 5, max_length: 300}
+  confirmation: explicit_button
+  expires_seconds: 600
+  actions: [list_owned_orders, prepare_owned_after_sales, confirm_owned_after_sales]

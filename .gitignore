@@ -1,0 +1,36 @@
+.runtime/
+.venv/
+__pycache__/
+.pytest_cache/
+*.log
+.env
+**/target/
+**/node_modules/
+**/dist/
+**/.idea/
+**/.env
+*.pyc
+
+# Local configuration, private credentials and generated artifacts
+.env.*
+!.env.example
+**/.env.*
+!**/.env.example
+**/unpackage/
+**/.vscode/
+**/.DS_Store
+*.iml
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+*.sqlite
+*.sqlite3
+*.db
+*.sql.gz
+*.sql.zip
+
+# Personal documents and temporary exports
+/output/
+/tmp/

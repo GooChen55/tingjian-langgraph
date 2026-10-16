@@ -1,0 +1,58 @@
+{
+  "generated_at": "2026-10-16T11:30:01+08:00",
+  "python_tests": 143,
+  "personal_live_checks": 36,
+  "restart_verified": true,
+  "browser_checks": 13,
+  "browser_page_errors": 0,
+  "h5_build": true,
+  "current_adapters": {
+    "object": "minio",
+    "parser": "pypdf",
+    "vector": "milvus"
+  },
+  "new_managed_cloud_service_configured": false,
+  "reports": [
+    {
+      "local_report": ".runtime/personal-acceptance.json",
+      "sha256": "69d385cfa93ad138d7352459be8f03923cd8ffdb6abcd3151cffb7783c7c6782",
+      "modified_at": "2026-10-16T11:21:47+08:00"
+    },
+    {
+      "local_report": ".runtime/personal-browser.json",
+      "sha256": "a50c6258d4aa91a41bcb89a5fc3dadb17d2b266d130f34d651eaa45a3a992c10",
+      "modified_at": "2026-10-16T11:29:14+08:00"
+    },
+    {
+      "local_report": ".runtime/personal-model-live.json",
+      "sha256": "89a9d1f1ac42b123f4f909d0e1d2dced25872d331db65dac44f99d1e78c176a3",
+      "modified_at": "2026-10-16T11:27:37+08:00"
+    },
+    {
+      "local_report": ".runtime/personal-python-tests.log",
+      "sha256": "a33321601d766fae3bc19482a00d595094f589d0f54a3c79839a33694ce04a4d",
+      "modified_at": "2026-10-16T11:20:49+08:00"
+    },
+    {
+      "local_report": ".runtime/personal-h5-build.log",
+      "sha256": "8d6bce0e5fe222f5419d9e3156f2135b24991110687bb08655281ddf13b9c15b",
+      "modified_at": "2026-10-16T11:28:51+08:00"
+    },
+    {
+      "local_report": ".runtime/personal-final-health.json",
+      "sha256": "7bfbe58e330cc56d8f6fe7f27c6a1aa0716b3fe8c09d46cba3a33d1f64256fc1",
+      "modified_at": "2026-10-16T11:29:20+08:00"
+    },
+    {
+      "local_report": ".runtime/personal-isolation.log",
+      "sha256": "e80dc6bb79da993d019c569963374a2faa412d7c1e6ad9ccca315feb3e6ffd71",
+      "modified_at": "2026-10-16T11:21:50+08:00"
+    },
+    {
+      "local_report": ".runtime/fusion-browser.json",
+      "sha256": "ba2a27d150517e76731040cfc9860750b33c8cfae4641bc661ea88a78b2ee1fa",
+      "modified_at": "2026-10-16T11:13:05+08:00"
+    }
+  ],
+  "raw_reports_private": true
+}

@@ -1,0 +1,36 @@
+server:
+  address: 127.0.0.1
+  port: 19201
+spring:
+  cloud:
+    nacos:
+      config:
+        enabled: false
+      discovery:
+        enabled: false
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:${LISTENING_DB_PORT:24316}/tingshu_user?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai
+    username: root
+    password: ${LISTENING_DB_PASSWORD:listening_local_only}
+  jackson:
+    deserialization:
+      fail-on-unknown-properties: true
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 17389
+    mongodb:
+      uri: mongodb://127.0.0.1:18018/tingshu
+  rabbitmq:
+    listener:
+      simple:
+        auto-startup: false
+      direct:
+        auto-startup: false
+wx:
+  miniapp:
+    appid: local-demo-unused
+    secret: local-demo-unused
+listening:
+  demo-login-enabled: ${LISTENING_DEMO_LOGIN:false}

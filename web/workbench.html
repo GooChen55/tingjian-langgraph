@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>听见 · 智能听书工作台</title>
+<style>
+:root{font-family:system-ui,-apple-system,"Microsoft YaHei",sans-serif;color:#223c3a;background:#f3f5ef}*{box-sizing:border-box}body{margin:0}button,input{font:inherit}button{cursor:pointer;border:0}button:disabled{opacity:.5;cursor:wait}[hidden]{display:none!important}header{padding:24px 5%;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #dfe5da}h1{font-size:24px;margin:0}h1 span{font-weight:400;color:#789183;font-size:14px;margin-left:12px}.status{font-size:13px;color:#678174}.layout{display:grid;grid-template-columns:300px minmax(0,1fr);max-width:1240px;margin:30px auto;gap:24px;padding:0 24px}aside,.panel{background:white;border:1px solid #e1e6dd;border-radius:18px}aside{padding:26px;height:fit-content}h2{font-size:18px;margin:0 0 16px}.muted{font-size:13px;color:#789183;line-height:1.8}.badge{display:inline-block;background:#edf3e8;border-radius:20px;padding:5px 10px;font-size:12px;margin:8px 0 20px}.primary{background:#244f45;color:white;padding:12px 18px;border-radius:10px;width:100%}.secondary{background:#e8efe6;color:#244f45;padding:12px 18px;border-radius:10px;width:100%;margin-top:10px}.example{display:block;text-align:left;background:#f5f7f1;color:#345849;width:100%;padding:12px;border-radius:8px;margin:10px 0}.panel{overflow:hidden}.panel-head{padding:22px;border-bottom:1px solid #edf0e9;display:flex;justify-content:space-between;align-items:center}.panel-head button{background:none;color:#718777}.messages{height:520px;overflow:auto;padding:24px}.message{margin-bottom:22px;max-width:94%}.label{font-size:12px;color:#809082;margin-bottom:7px}.bubble{white-space:pre-wrap;line-height:1.8;font-size:14px;background:#f1f5ec;padding:16px 18px;border-radius:0 14px 14px}.user{margin-left:auto}.user .bubble{background:#244f45;color:white;border-radius:14px 0 14px 14px}.sources{margin-top:10px}.source{font-size:12px;background:#fff;border:1px solid #dce5d7;border-radius:6px;padding:8px;margin-top:6px}.source summary{cursor:pointer}.quote{white-space:pre-wrap;line-height:1.8;font-size:13px;margin:10px 0;color:#456451}.trace{font-size:11px;color:#789183;margin-top:8px}.compose{padding:18px 22px;border-top:1px solid #edf0e9;display:flex;gap:12px}.compose input{flex:1;min-width:0;border:1px solid #dce4d5;border-radius:10px;padding:12px;outline-color:#477462}.compose button{width:88px}.data-wrap{overflow:auto;margin-top:14px}table{border-collapse:collapse;width:100%;font-size:13px}td,th{padding:12px;border-bottom:1px solid #dfe5da;text-align:left;white-space:nowrap}th{background:#edf3e8}.sql{white-space:pre-wrap;overflow-wrap:anywhere;font-size:12px;background:#f8f9f5;padding:12px}.result-note{font-size:12px;line-height:1.8;color:#789183;margin-top:12px}@media(max-width:760px){.layout{grid-template-columns:1fr;margin:16px auto}.messages{height:52vh}aside{padding:18px}.example{display:inline-block;width:auto;margin-right:6px}h1 span{display:none}}
+</style>
+<style>
+.business-card{border:1px solid #dfe7db;border-radius:12px;padding:18px;margin:14px 0;background:#fafbf7}.business-card h3{font-size:15px;margin:0 0 8px}.business-card p{font-size:13px;line-height:1.8;overflow-wrap:anywhere;white-space:pre-wrap}.business-card .badge{margin:0 0 6px}.actions{display:flex;flex-wrap:wrap;gap:10px}.actions button{width:auto;margin:0}.reason-form{margin-top:16px}.reason-form label{font-size:13px;display:block}.reason-form textarea{display:block;width:100%;margin:10px 0;border:1px solid #ccd9c7;padding:12px;border-radius:8px;font:inherit;resize:vertical;min-height:80px}.notice{background:#edf3e8;padding:12px;border-radius:8px;font-size:13px;line-height:1.8}.business-error{color:#994536}.business-empty{font-size:13px;color:#789183}.business-link{width:auto;margin-top:12px}
+</style>
+</head>
+<body>
+<header><h1>听见<span>让好内容，接着发生</span></h1><div class="status" id="status">正在检查服务…</div></header>
+<main class="layout">
+<aside>
+  <h2>你的听书助手</h2><p class="muted">聊聊一本书，找回收听位置，查询订单与处理售后申请。</p>
+  <div class="badge" id="mode">正在连接资料库</div>
+  <button class="primary" id="login">登录演示听友</button>
+  <p class="muted" id="account">演示账号包含示例收听记录与两条演示订单。</p>
+  <button class="secondary" id="switch" hidden>切换到运营问数</button>
+  <button class="secondary" id="business" hidden>我的订单与售后</button>
+  <p class="muted"><a href="/listen/">进入原听书前端</a> · <a href="/admin">管理员登录</a></p>
+  <h2 style="margin-top:28px">从这里开始</h2>
+  <div id="chat-examples">
+    <button class="example" data-q="《三体》讲什么？">《三体》讲什么？</button>
+    <button class="example" data-q="有哪些书适合轻松的碎片化通勤收听？">轻松通勤听什么？</button>
+    <button class="example" data-q="我上次听到哪里了？">找回收听进度</button>
+    <button class="example" data-q="我的会员什么时候到期？">查看会员状态</button>
+    <button class="example" data-q="查看我的订单和支付状态。">查询我的订单</button>
+  </div>
+  <div id="ops-examples" hidden>
+    <button class="example" data-q="平台共有多少个专辑和声音？">内容总量</button>
+    <button class="example" data-q="按分类统计专辑数量，取前5名。">分类内容排行</button>
+    <button class="example" data-q="当前有效VIP有多少人？">有效会员数量</button>
+    <button class="example" data-q="已支付订单总金额是多少？">已支付订单金额</button>
+  </div>
+  <p class="muted" id="boundary">可展开引用查看原文。售后申请登记后待人工审核。</p>
+</aside>
+<section class="panel">
+  <div class="panel-head"><h2 style="margin:0" id="title">与助手对话</h2><button id="new">开启新会话</button><button id="refresh-business" hidden>刷新状态</button></div>
+  <div class="messages" id="messages" aria-live="polite"></div>
+  <form class="compose" id="form"><input id="input" maxlength="2000" placeholder="输入书名，或问问你的收听进度…" aria-label="消息"><button class="primary" id="send">发送</button></form>
+</section>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+let token=sessionStorage.getItem('listening-token')||'',sid=sessionStorage.getItem('listening-session')||'',busy=false,scope='chat',canOperate=false,canBusiness=false,opsRun='';
+function scrollEnd(){$('messages').scrollTop=$('messages').scrollHeight}
+function show(role,text,sources=[],trace=[]){
+  const box=document.createElement('div');box.className='message '+(role==='user'?'user':'');
+  const label=document.createElement('div');label.className='label';label.textContent=role==='user'?'你':'听见助手';
+  const bubble=document.createElement('div');bubble.className='bubble';bubble.textContent=text;box.append(label,bubble);
+  if(sources.length){const refs=document.createElement('div');refs.className='sources';sources.forEach(s=>{
+    const item=document.createElement('details');item.className='source';
+    const title=document.createElement('summary');title.textContent=(s.citation?'['+s.citation+'] ':'')+(s.title||s.source||'参考资料')+(s.section?' · '+s.section:'');
+    const quote=document.createElement('p');quote.className='quote';quote.textContent=s.quote||s.source||'未提供原文片段';
+    item.append(title,quote);refs.append(item)});box.append(refs)}
+  if(trace.length){const el=document.createElement('div');el.className='trace';el.textContent='已调用：'+trace.map(t=>t.tool).join(' → ');box.append(el)}
+  if(trace.some(t=>['get_orders','get_after_sales'].includes(t.tool))){const b=document.createElement('button');b.className='secondary business-link';b.textContent='查看订单与售后';b.onclick=()=>setScope('business');box.append(b)}
+  $('messages').append(box);scrollEnd();return box;
+}
+function showOperations(data){
+  if(data.status==='clarification_required'){opsRun=data.request_id;show('assistant',data.clarification+'\n请继续输入口径补充，10 分钟内有效。');return}
+  opsRun='';
+  const box=show('assistant','查询完成，返回 '+data.row_count+' 行结果。');
+  if(data.rows.length){const wrap=document.createElement('div');wrap.className='data-wrap';const table=document.createElement('table');const head=document.createElement('tr');
+    data.columns.forEach(c=>{const th=document.createElement('th');th.textContent=data.labels[c]||c;head.append(th)});table.append(head);
+    data.rows.forEach(row=>{const tr=document.createElement('tr');data.columns.forEach(c=>{const td=document.createElement('td');td.textContent=row[c]===null?'—':String(row[c]);tr.append(td)});table.append(tr)});wrap.append(table);box.append(wrap)
+  }else{const empty=document.createElement('p');empty.textContent='该时间范围没有记录。';box.append(empty)}
+  const note=document.createElement('div');note.className='result-note';note.textContent='口径：'+data.definition+'\n数据：'+data.data_source;box.append(note);
+  const details=document.createElement('details');details.className='source';const title=document.createElement('summary');title.textContent='查看查询语句与审计编号';
+  const code=document.createElement('pre');code.className='sql';code.textContent=data.sql+'\n\n审计编号：'+data.request_id;details.append(title,code);box.append(details);scrollEnd();
+}
+function clearAuth(){token='';canOperate=false;canBusiness=false;sessionStorage.removeItem('listening-token');$('login').textContent='登录演示听友';$('account').textContent='登录已过期，请重新登录。';$('switch').hidden=true;$('business').hidden=true;if(scope==='business')$('messages').replaceChildren()}
+async function api(path,opts={}){const res=await fetch(path,{...opts,headers:{'Content-Type':'application/json',token,...opts.headers}});const body=await res.json();if(!res.ok){if(res.status===401)clearAuth();throw Error(typeof body.detail==='string'?body.detail:'服务暂时不可用')}return body}
+async function refreshAccount(){const me=await api('/api/me');canOperate=!!me.capabilities?.operations;canBusiness=!!me.capabilities?.orders;$('account').textContent=me.nickname+' · 演示账号'+(canOperate?' / 运营权限':'');$('login').textContent='已登录';$('switch').hidden=!canOperate;$('business').hidden=!canBusiness;$('status').textContent='助手已就绪'}
+async function restoreChat(){if(!sid){show('assistant','你好，可以了解书籍、查询会员和收听进度。');return}const data=await api('/api/history/'+sid);data.messages.forEach(m=>show(m.role,m.text,m.sources||[],m.trace||[]))}
+async function send(text){
+  if(busy||!text.trim())return;if(!token){show('assistant','请先点击登录按钮。');return}
+  busy=true;$('send').disabled=true;$('switch').disabled=true;show('user',text);$('input').value='';
+  try{if(scope==='ops'){showOperations(await api('/api/ops/query',{method:'POST',body:JSON.stringify({text,...(opsRun?{run_id:opsRun}:{})})}))}
+    else{const data=await api('/api/assistant/chat',{method:'POST',body:JSON.stringify({text,session_id:sid||null})});sid=data.session_id;sessionStorage.setItem('listening-session',sid);show('assistant',data.text,data.sources,data.trace)}
+  }catch(e){show('assistant',e.message)}finally{busy=false;$('send').disabled=false;$('switch').disabled=false;$('input').focus()}
+}
+$('form').onsubmit=e=>{e.preventDefault();send($('input').value)};
+document.querySelectorAll('[data-q]').forEach(b=>b.onclick=()=>send(b.dataset.q));
+async function setScope(next){if(busy||(next==='ops'&&!canOperate)||(next==='business'&&!canBusiness))return;scope=next;$('messages').replaceChildren();$('title').textContent=scope==='ops'?'运营数据查询':scope==='business'?'我的订单与售后':'与助手对话';$('switch').textContent=scope==='ops'?'返回听书咨询':'切换到运营问数';$('business').textContent=scope==='business'?'返回听书咨询':'我的订单与售后';$('chat-examples').hidden=scope!=='chat';$('ops-examples').hidden=scope!=='ops';$('new').hidden=scope!=='chat';$('refresh-business').hidden=scope!=='business';$('form').hidden=scope==='business';$('input').maxLength=scope==='ops'?1000:2000;$('input').placeholder=scope==='ops'?'例如：按分类统计专辑数量，取前5名':'输入书名，或问问你的收听进度…';$('boundary').textContent=scope==='ops'?'仅提供统计查询，排除演示账号。每次查询保留审计编号。':scope==='business'?'填写原因后核对申请。确认有效期为 10 分钟，登记成功后待人工审核。':'可展开引用查看原文。售后申请登记后待人工审核。';if(scope==='ops')show('assistant','可以查询内容、用户和已支付订单统计。结果会展示指标口径与查询依据。');else if(scope==='business')await businessAction(loadBusiness);else{busy=true;try{await restoreChat()}catch(e){show('assistant',e.message)}finally{busy=false}}}
+$('switch').onclick=()=>setScope(scope==='ops'?'chat':'ops');
+$('business').onclick=()=>setScope(scope==='business'?'chat':'business');
+function node(tag,text,cls=''){const el=document.createElement(tag);el.textContent=text;el.className=cls;return el}
+function businessError(message){$('messages').append(node('p',message,'business-error'))}
+async function businessAction(action){if(busy)return;busy=true;document.querySelectorAll('.actions button,.reason-form button').forEach(b=>b.disabled=true);$('refresh-business').disabled=true;try{await action()}catch(e){businessError(e.message)}finally{busy=false;document.querySelectorAll('.actions button,.reason-form button').forEach(b=>b.disabled=false);$('refresh-business').disabled=false}}
+function localTime(value){return value?new Date(value).toLocaleString('zh-CN',{timeZone:'Asia/Shanghai',hour12:false}):'—'}
+async function loadBusiness(){const [orders,requests]=await Promise.all([api('/api/business/orders'),api('/api/business/after-sales')]);$('messages').replaceChildren();
+  $('messages').append(node('p','演示订单用于体验流程。售后仅登记申请，需人工审核；本页面不执行资金退款。','notice'));
+  $('messages').append(node('h2','售后申请'));
+  if(!requests.records.length)$('messages').append(node('p','还没有售后申请。可以在下方已支付订单中填写原因。','business-empty'));
+  requests.records.forEach(r=>{const card=node('div','','business-card');card.append(node('span',r.statusLabel,'badge'),node('h3',r.title),node('p','订单号：'+r.orderNo+'\n订单金额：¥'+r.amount+'\n原因：'+r.reason+'\n申请编号：'+r.id));
+    if(r.status==='DRAFT')card.append(node('p','请核对订单、金额和原因。此操作仅登记售后申请，待人工审核。\n确认有效至：'+localTime(r.expiresAt)+'（北京时间）','notice'));
+    if(r.submittedAt)card.append(node('p','登记时间：'+localTime(r.submittedAt)+'（北京时间）','muted'));
+    if(r.reviewNote)card.append(node('p','审核意见：'+r.reviewNote+'\n审核时间：'+localTime(r.reviewedAt)+'（北京时间）','notice'));
+    const actions=node('div','','actions');
+    if(r.status==='DRAFT'){const confirm=node('button','确认登记，等待审核','primary');confirm.onclick=()=>businessAction(async()=>{await api('/api/business/after-sales/'+r.id+'/confirm',{method:'POST',body:JSON.stringify({confirmed:true})});await loadBusiness()});actions.append(confirm)}
+    if(['DRAFT','SUBMITTED'].includes(r.status)){const withdraw=node('button',r.status==='DRAFT'?'放弃草稿':'撤回申请','secondary');withdraw.onclick=()=>businessAction(async()=>{await api('/api/business/after-sales/'+r.id+'/withdraw',{method:'POST'});await loadBusiness()});actions.append(withdraw)}
+    card.append(actions);$('messages').append(card)});
+  $('messages').append(node('h2','最近的订单'));
+  if(!orders.records.length)$('messages').append(node('p','没有找到你的订单。','business-empty'));
+  orders.records.forEach(r=>{const card=node('div','','business-card');card.append(node('span',r.statusLabel,'badge'),node('h3',r.title),node('p','订单号：'+r.orderNo+'\n订单金额：¥'+r.amount));
+    const active=requests.records.some(a=>a.orderId===r.id&&['DRAFT','SUBMITTED','APPROVED'].includes(a.status));
+    if(r.status==='0902'&&Number(r.amount)>0&&!active){const button=node('button','申请售后','secondary');card.append(button);button.onclick=()=>{if(busy)return;button.hidden=true;const form=node('form','','reason-form');const id='reason-'+r.id;const label=node('label','填写售后原因（5 至 300 字）');label.htmlFor=id;const reason=document.createElement('textarea');reason.id=id;reason.required=true;reason.minLength=5;reason.maxLength=300;reason.placeholder='例如：误购此专辑，希望申请售后。';const submit=node('button','下一步：核对申请','primary');submit.type='submit';form.append(label,reason,submit);form.onsubmit=e=>{e.preventDefault();businessAction(async()=>{await api('/api/business/after-sales/prepare',{method:'POST',body:JSON.stringify({orderId:r.id,reason:reason.value.trim()})});await loadBusiness();$('messages').scrollTop=0})};card.append(form);reason.focus()}}
+    else if(active)card.append(node('p','已有待确认或待审核申请，请查看上方记录。','muted'));
+    else card.append(node('p','该订单当前不可申请售后。','muted'));
+    $('messages').append(card)});
+}
+$('refresh-business').onclick=()=>businessAction(loadBusiness);
+$('new').onclick=()=>{if(busy)return;sid='';opsRun='';sessionStorage.removeItem('listening-session');$('messages').replaceChildren();show('assistant','新会话已开启。你想了解哪本书？')};
+$('login').onclick=async()=>{if(busy)return;$('login').disabled=true;try{const data=await api('/api/local/login',{method:'POST'});token=data.token;sessionStorage.setItem('listening-token',token);await refreshAccount();show('assistant','登录成功，可以开始查询了。')}catch(e){show('assistant',e.message)}finally{$('login').disabled=false}};
+(async()=>{try{const h=await api('/health');$('status').textContent='助手已就绪 · '+h.documents+' 份听书资料';$('mode').textContent=h.knowledge==='rag'?'向量资料库已接通':(h.llm?'模型工具调用 / 关键词检索':'本地联调 / 关键词检索');if(token){await refreshAccount();await restoreChat()}else show('assistant','你好，请先登录演示听友。')}catch(e){$('status').textContent=e.message;show('assistant',e.message)}})();
+</script>
+</body></html>

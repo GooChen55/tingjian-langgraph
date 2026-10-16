@@ -1,0 +1,53 @@
+server:
+  address: 127.0.0.1
+  port: 19204
+spring:
+  application:
+    name: aillisten-dev-order
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${LISTENING_DB_HOST:192.168.6.100}:${LISTENING_DB_PORT:3306}/aillisten_dev_order?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai
+    username: aillisten_dev_app
+    password: ${LISTENING_APP_DB_PASSWORD}
+    hikari:
+      connection-init-sql: SET time_zone = '+08:00'
+  data:
+    redis:
+      host: ${LISTENING_DB_HOST:192.168.6.100}
+      port: 6379
+      username: aillisten_dev_app
+      password: ${LISTENING_REDIS_PASSWORD}
+      database: 0
+    mongodb:
+      uri: ${LISTENING_MONGO_URI}
+  rabbitmq:
+    host: ${LISTENING_DB_HOST:192.168.6.100}
+    port: 5672
+    virtual-host: /aillisten-dev
+    username: aillisten_dev_app
+    password: ${LISTENING_RABBIT_PASSWORD}
+    publisher-confirm-type: correlated
+    publisher-returns: true
+    template:
+      mandatory: true
+    listener:
+      simple:
+        auto-startup: false
+      direct:
+        auto-startup: false
+  cloud:
+    bus:
+      enabled: false
+  jackson:
+    deserialization:
+      fail-on-unknown-properties: true
+listening:
+  infrastructure: vm
+  redis-key-prefix: 'aillisten:dev:'
+  user-schema: aillisten_dev_user
+  album-schema: aillisten_dev_album
+  demo-login-enabled: ${LISTENING_DEMO_LOGIN:false}
+wx:
+  miniapp:
+    appid: local-demo-unused
+    secret: local-demo-unused

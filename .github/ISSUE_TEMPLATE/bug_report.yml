@@ -1,0 +1,31 @@
+name: 问题反馈
+description: 报告可以复现的功能或运行问题
+title: "[问题] "
+body:
+  - type: markdown
+    attributes:
+      value: 请勿填写 API Key、密码、完整账号信息或未经脱敏的日志。
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: 复现步骤
+      description: 页面入口、操作步骤或执行命令
+    validations:
+      required: true
+  - type: textarea
+    id: result
+    attributes:
+      label: 预期和实际结果
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: 环境与版本
+      description: 提交版本、系统、浏览器及相关运行环境
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: 脱敏日志或截图

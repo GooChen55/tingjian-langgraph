@@ -1,0 +1,87 @@
+const {chromium}=require('../../frontend/uniapp/node_modules/playwright');
+const fs=require('fs');
+const crypto=require('crypto');
+const path=require('path');process.chdir(path.resolve(__dirname,'../..'));
+(async()=>{
+ const browser=await chromium.launch({channel:'msedge',headless:true});
+ const context=await browser.newContext({viewport:{width:1440,height:1000},reducedMotion:'reduce'});
+ const page=await context.newPage();const errors=[];page.on('pageerror',e=>errors.push(e.message));
+ try{
+  await page.goto('http://127.0.0.1:29183/admin');
+  await page.locator('#password').fill(fs.readFileSync('.runtime/admin-password','utf8').trim());
+  await page.locator('#login').click();
+  await page.locator('#knowledge-management:not([hidden])').waitFor({timeout:15000});
+  await page.locator('#knowledge-documents table').waitFor({timeout:15000});
+  await page.locator('#content-id').fill('900001');await page.locator('#content-load').click();
+  await page.waitForFunction(()=>document.getElementById('content-title').value.length>0);
+  await page.screenshot({path:'.runtime/fusion-admin-desktop.png',fullPage:true});
+  await page.reload();await page.locator('#knowledge-management:not([hidden])').waitFor({timeout:15000});
+  await page.locator('#knowledge-documents table').waitFor({timeout:15000});
+  const adminOk=await page.locator('#knowledge-documents table').isVisible();
+  await page.locator('#knowledge-management').screenshot({path:'.runtime/fusion-knowledge-desktop.png'});
+  const uploadTitle='浏览器表单验收'+Date.now();
+  await page.locator('#knowledge-title').fill(uploadTitle);
+  await page.locator('#knowledge-file').setInputFiles({name:'browser.md',mimeType:'text/markdown',buffer:Buffer.from('# '+uploadTitle+'\n\n这是浏览器表单上传的自建资料，仅用于验证知识管理操作。')});
+  await page.locator('#knowledge-form').getByRole('button',{name:'上传并导入',exact:true}).click();
+  await page.waitForFunction(()=>document.getElementById('knowledge-result').textContent.includes('已提交导入'));
+  await page.waitForFunction(()=>Array.from(document.querySelectorAll('#knowledge-form button')).every(button=>!button.disabled));
+  const uploaded=page.locator('#knowledge-documents tr').filter({hasText:uploadTitle});
+  await uploaded.waitFor();
+  page.once('dialog',async dialog=>{if(dialog.message().includes(uploadTitle))await dialog.accept();else await dialog.dismiss()});
+  await uploaded.getByRole('button',{name:'删除资料',exact:true}).click();
+  await page.waitForFunction(title=>Array.from(document.querySelectorAll('#knowledge-documents tr')).some(row=>row.textContent.includes(title)&&row.textContent.includes('DELET')),uploadTitle);
+  await page.goto('http://127.0.0.1:29183/listen/#/');
+  await page.getByRole('button',{name:'打开听见助手'}).click();
+  await page.getByRole('dialog',{name:'听见助手'}).waitFor();
+  await page.getByRole('button',{name:'全屏助手',exact:true}).click();
+  const full=await page.locator('.assistant-panel.fullscreen').isVisible();
+  const web=page.getByRole('checkbox',{name:'允许联网补充'});
+  await web.check();if(!await web.isChecked())throw Error('Web option did not enable');
+  await web.uncheck();if(await web.isChecked())throw Error('Web option did not disable');
+  await page.screenshot({path:'.runtime/fusion-assistant-desktop.png'});
+  await page.setViewportSize({width:390,height:844});await page.screenshot({path:'.runtime/fusion-assistant-mobile.png'});
+  const account={username:'browser_'+crypto.randomBytes(6).toString('hex'),password:crypto.randomBytes(20).toString('base64url')};
+  const base='http://127.0.0.1:29183';
+  async function api(route,body,token){const r=await page.request.post(base+route,{data:body,headers:token?{token}:{}});if(!r.ok())throw Error('Browser fixture request failed: '+route+' '+r.status());return r.json()}
+  await api('/api/account/register',account);
+  const token=(await api('/api/account/login',account)).token;
+  let order;
+  try{
+   order=await api('/api/business/local/checkout',{product:'listening-demo',idempotencyKey:crypto.randomUUID(),confirmed:true},token);
+   await api('/api/business/local/orders/'+order.orderId+'/simulate',{outcome:'SUCCESS',confirmed:true},token);
+  }finally{await api('/api/account/logout',{},token)}
+  await page.getByRole('button',{name:'收起助手',exact:true}).click();
+  await page.goto(base+'/listen/#/pages/login/login');
+  await page.locator('.auth input').nth(0).fill(account.username);
+  await page.locator('.auth input').nth(1).fill(account.password);
+  await page.locator('.auth uni-button').filter({hasText:/^登录$/}).click();
+  await page.waitForURL(/\/listen\/#\/(?:pages\/index\/index)?$/);
+  await page.locator('.auth').waitFor({state:'hidden'});
+  await page.getByRole('button',{name:'打开听见助手'}).click();
+  await page.getByRole('button',{name:'全屏助手',exact:true}).click();
+  await page.getByRole('button',{name:'办理售后',exact:true}).click();
+  await page.locator('.task-card').getByRole('button').filter({hasText:order.orderNo}).click();
+  await page.locator('.task-card').getByText('请填写 5–300 字申请原因。不会自动提交申请。',{exact:true}).waitFor();
+  await page.getByRole('textbox',{name:'给听见助手发送消息'}).fill('浏览器验收：误购申请，请人工审核。');
+  await page.getByRole('button',{name:'发送消息',exact:true}).click();
+  await page.getByRole('button',{name:'确认提交人工审核',exact:true}).waitFor();
+  await page.locator('.task-card').scrollIntoViewIfNeeded();
+  await page.screenshot({path:'.runtime/fusion-task-mobile.png'});
+  await page.reload();
+  await page.getByRole('button',{name:'打开听见助手'}).click();
+  await page.getByRole('button',{name:'确认提交人工审核',exact:true}).waitFor();
+  await page.getByRole('button',{name:'先问别的',exact:true}).click();
+  await page.getByRole('button',{name:'继续办理',exact:true}).click();
+  await page.getByRole('button',{name:'确认提交人工审核',exact:true}).waitFor();
+  await page.setViewportSize({width:1440,height:1000});
+  await page.getByRole('button',{name:'全屏助手',exact:true}).click();
+  await page.screenshot({path:'.runtime/fusion-task-desktop.png'});
+  page.once('dialog',dialog=>dialog.message().includes(order.orderNo)?dialog.accept():dialog.dismiss());
+  await page.getByRole('button',{name:'确认提交人工审核',exact:true}).click();
+  await page.locator('.message-text').filter({hasText:'售后申请已登记，等待人工审核；尚未退款。'}).waitFor();
+  const result={passed:adminOk&&full&&errors.length===0,adminReload:adminOk,knowledgeUploadAndDelete:true,assistantFullscreen:full,webToggle:true,loginAndTaskSubmission:true,taskRefreshPauseResume:true,pageErrors:errors};
+  fs.writeFileSync('.runtime/fusion-browser.json',JSON.stringify(result,null,2));console.log(JSON.stringify(result));
+  if(!result.passed)process.exitCode=1;
+ }catch(e){await page.screenshot({path:'.runtime/fusion-browser-failure.png',fullPage:true});throw e}
+ finally{await context.close();await browser.close()}
+})().catch(e=>{console.error(e.stack);process.exitCode=1});

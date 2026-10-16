@@ -1,0 +1,35 @@
+CREATE TABLE IF NOT EXISTS listening_ops.personal_space (
+ id char(36) PRIMARY KEY,
+ owner_id bigint NOT NULL,
+ name varchar(80) NOT NULL,
+ ai_enabled tinyint NOT NULL DEFAULT 0,
+ created_at datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+ UNIQUE KEY personal_space_name(owner_id,name),
+ UNIQUE KEY personal_space_owner(id,owner_id)
+) ENGINE=InnoDB;
+CREATE TABLE IF NOT EXISTS listening_ops.personal_item (
+ id bigint PRIMARY KEY AUTO_INCREMENT,
+ owner_id bigint NOT NULL,
+ space_id char(36) NOT NULL,
+ kind varchar(16) NOT NULL,
+ title varchar(120) NOT NULL,
+ content mediumtext NOT NULL,
+ filename varchar(240) NULL,
+ object_key varchar(400) NULL,
+ album_id bigint NULL,
+ track_id bigint NULL,
+ anchor_second decimal(12,2) NULL,
+ revision char(64) NOT NULL,
+ active_revision char(64) NULL,
+ active_text mediumtext NULL,
+ active_title varchar(120) NULL,
+ active_link json NULL,
+ vector_model char(64) NULL,
+ status varchar(24) NOT NULL DEFAULT 'QUEUED',
+ deleted tinyint NOT NULL DEFAULT 0,
+ error_code varchar(100) NULL,
+ created_at datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+ updated_at datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+ INDEX personal_items(owner_id,space_id,deleted,updated_at),
+ CONSTRAINT personal_item_scope FOREIGN KEY (space_id,owner_id) REFERENCES personal_space(id,owner_id)
+) ENGINE=InnoDB;

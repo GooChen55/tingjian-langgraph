@@ -1,0 +1,10 @@
+<template><view class="bottom-nav"><view class="bottom-nav-inner"><button :class="{active:route==='pages/index/index'}" @click="go('/pages/index/index')"><text>⌂</text><text>发现</text></button><button :class="{active:route==='pages/search/search'}" @click="go('/pages/search/search')"><text>▤</text><text>找书</text></button><button class="nav-assistant" @click="openAssistant()"><text>✦</text><text>听见助手</text></button><button :class="{active:route==='pages/business/business'}" @click="go('/pages/business/business')"><text>▣</text><text>订单</text></button><button :class="{active:route==='pages/my/my'}" @click="go('/pages/my/my')"><text>♙</text><text>我的</text></button></view></view></template>
+<script setup lang="ts">
+import {ref} from 'vue'
+import {onShow} from '@dcloudio/uni-app'
+import {openAssistant} from '../../stores/assistant'
+const route=ref('pages/index/index')
+onShow(()=>{const pages=getCurrentPages();route.value=pages[pages.length-1]?.route||'pages/index/index'})
+function go(url:string){uni.navigateTo({url})}
+</script>
+<style scoped>.bottom-nav{position:fixed;bottom:0;left:0;right:0;border-top:1px solid #e1e7d8;background:#fffefaee;backdrop-filter:blur(16px);z-index:50;padding-bottom:env(safe-area-inset-bottom)}.bottom-nav-inner{max-width:650px;margin:auto;display:flex;justify-content:space-around;align-items:center;padding:10px 8px 12px}.bottom-nav button{display:flex;flex-direction:column;align-items:center;gap:5px;font-size:9px;line-height:normal;border:0;background:transparent;color:#94a086;margin:0;min-width:0;flex:1;padding:2px 8px;overflow:visible}.bottom-nav button:after{display:none}.bottom-nav button>text:first-child{font-size:23px;height:44px;display:flex;align-items:center;justify-content:center;flex-shrink:0}.bottom-nav .active{color:#285a4b}.bottom-nav .nav-assistant{color:#285a4b}.nav-assistant>text:first-child{background:#285a4b;color:#edebcc;border-radius:14px;width:44px;height:44px;box-sizing:border-box;padding:0;margin:0;line-height:1;font-size:27px;border:4px solid #fffefa;box-shadow:0 2px 12px #285a4b18}</style>
